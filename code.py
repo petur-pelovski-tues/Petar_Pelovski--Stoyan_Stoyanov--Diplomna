@@ -11,10 +11,10 @@ white = 0
 proba = 0
 x = 0
 i = 1
+line = 0
 white = 0
+right = 0
 left = 0
-left-benchmark = 150
-
 
 while(1):
 	i = 1
@@ -24,7 +24,7 @@ while(1):
 
 	# define range of white color in HSV
 	# change it according to your need !
-	sensitivity = 40
+	sensitivity = 50
 	lower_white = np.array([0,0,255-sensitivity])
 	upper_white = np.array([255,sensitivity,255])
 
@@ -33,15 +33,17 @@ while(1):
 
 	cv2.imshow('frame',hsv)
 	cv2.imshow('mask',mask)
-	#print mask.size
 	while i == 1:
-		if(mask[200,x]==(255.0)):
+		if(mask[250,x]==(255.0)):
 			white = white + 1
+			x = x + 1
 		else:	
 
 			if white > 3:
-				left = x
-				white = 0
+				if line == 0:
+					left = x
+					line = 1
+					white = 0
 			else:
 				white = 0
 			x = x + 1
@@ -49,18 +51,14 @@ while(1):
 			i = 2
 			x = 0
 			k = 27
-			time.sleep(0.3)
-			time.sleep(0.3)
 			if left < left-benchmark:
 				GPIO.output(7, True)
 				GPIO.output(11, True)
-				GPIO.output(11, False)
-				proba = 1		
+				GPIO.output(11, False)	
 			if left > left-benchmark:
 				GPIO.output(7, False)
 				GPIO.output(11, True)
 				GPIO.output(11, False)
-				proba = 1
 
 	k = cv2.waitKey(5) & 0xFF
 	if k == 27:
